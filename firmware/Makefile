@@ -1,3 +1,5 @@
+.PHONY:all clean cleanall build
+
 TESTNAME = smoke
 
 # 可执行文件名

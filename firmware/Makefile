@@ -3,11 +3,11 @@ TESTNAME = smoke
 # 可执行文件名
 TARGET = main
 
-ARCH = gc
-ABI = lp64d
+ARCH = ima
+ABI = ilp32
 
 # gcc类型
-CROSS_COMPILE = riscv64-unknown-elf-
+CROSS_COMPILE = riscv32-unknown-elf-
 
 CC      = ${CROSS_COMPILE}gcc
 LD      = ${CROSS_COMPILE}ld
@@ -17,11 +17,11 @@ READELF = ${CROSS_COMPILE}readelf
 
 CFLAGS := -O0 -g3 -funroll-loops -fpeel-loops -fgcse-sm -fgcse-las \
 				  -static -std=gnu99 -fno-common -fno-builtin-printf \
-					-Wa,-march=rv64$(ARCH) -mabi=$(ABI)
+					-Wa,-march=rv32$(ARCH) -mabi=$(ABI) 
 
 
 
-LDFLAGS   ?= -Wl,--no-warn-rwx-segments -T ./startup/link.ld -nostartfiles -nostdlib -lc -lgcc -march=rv64$(ARCH) -mabi=$(ABI)
+LDFLAGS   ?= -Wl,--no-warn-rwx-segments -T ./startup/link.ld -static -nostartfiles -nostdlib  -march=rv32$(ARCH) -mabi=$(ABI)
 
 
 # 存放中间文件的路径
@@ -71,7 +71,7 @@ all:$(BUILD_DIR) $(BUILD_DIR_CASE)/$(TARGET).elf
 
 
 $(BUILD_DIR_CASE)/$(TARGET).elf :$(SOBJS) $(COBJS)
-	$(CC) $(LDFLAGS) -o $@ $^
+	$(CC) $(LDFLAGS) -o $@ $^ ./lib/libgcc.a
 
 $(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)
